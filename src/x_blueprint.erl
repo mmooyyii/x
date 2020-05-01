@@ -1,8 +1,10 @@
 -module(x_blueprint).
 -author("MoYi").
 
--export([]).
+
+-include("x.hrl").
 -type prefix() :: binary().
 
-%% blueprint transform in compile time.
 -callback blueprint() -> prefix().
+-callback init() -> no_return().
+

@@ -1,15 +1,17 @@
 {application, x,
- [{description, "An OTP application"},
-  {vsn, "0.1.0"},
-  {registered, []},
-  {mod, {x_app, []}},
-  {applications,
-   [kernel,
-    stdlib
-   ]},
-  {env,[]},
-  {modules, []},
-
-  {licenses, ["Apache 2.0"]},
-  {links, []}
- ]}.
+    [{description, "An OTP application"},
+        {vsn, "0.1.0"},
+        {registered, []},
+        {mod, {x_app, []}},
+        {applications,
+            [
+                kernel,
+                stdlib,
+                cowboy,
+                jesse
+            ]},
+        {env, []},
+        {modules, []},
+        {licenses, ["Apache 2.0"]},
+        {links, []}
+    ]}.

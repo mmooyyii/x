@@ -1,7 +1,7 @@
 -module(helloworld).
 
 -behavior(x_blueprint).
--author("mmooyyii").
+-author("MoYi").
 -compile([{parse_transform, x_transform}]).
 
 %% API

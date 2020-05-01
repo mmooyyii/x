@@ -1,5 +1,5 @@
 -module(x_error).
--author("mmooyyii").
+-author("MoYi").
 
 -export([]).
 

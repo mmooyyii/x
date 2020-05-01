@@ -1,5 +1,5 @@
 -module(x_cowboy).
--author("mmooyyii").
+-author("MoYi").
 
 %% API
 -export([]).

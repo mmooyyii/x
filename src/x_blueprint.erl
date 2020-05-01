@@ -1,9 +1,8 @@
 -module(x_blueprint).
--author("mmooyyii").
+-author("MoYi").
 
 -export([]).
 -type prefix() :: binary().
 
-%%% blueprint transform in compile time,
-%%% route define will append to this function
+%% blueprint transform in compile time.
 -callback blueprint() -> prefix().

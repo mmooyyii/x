@@ -1,0 +1,1 @@
+erl -pa D:\x\_build\default\deps\cowboy\ebin D:\x\_build\default\deps\cowlib\ebin D:\x\_build\default\deps\jesse\ebin D:\x\_build\default\deps\ranch\ebin D:\x\_build\default\deps\sync\ebin D:\x\_build\default\deps\x\ebin -name "abc@127.0.0.1" -s x_app start

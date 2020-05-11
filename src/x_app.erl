@@ -8,7 +8,6 @@
 
 %% API.
 start() ->
-%%    TODO: 以后改
     ok = application:start(asn1),
     ok = application:start(crypto),
     ok = application:start(public_key),
@@ -19,9 +18,10 @@ start() ->
     ok = application:start(cowboy),
     ok = application:start(x).
 
-
 start(_Type, _Args) ->
-    {ok, self()}.
+    ets:new(abc, [set, named_table]),
+    x_sup:start_link().
 
 stop(_State) ->
-    ok = cowboy:stop_listener(http).
+    exit(x_sup, shutdown).
+

@@ -2,18 +2,7 @@
 -author("yimo").
 
 %% API
--export([body/1, set_web_app/2, run/1, stop/1]).
+-export([cowboy_init/2]).
 
-
-set_web_app(WebApp, Config) ->
+cowboy_init(Req, Option) ->
     ok.
-
-run(WebApp) ->
-    ok.
-
-stop(WebApp) ->
-    ok.
-
-body(Key) ->
-    ok.
-

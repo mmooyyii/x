@@ -1,13 +1,14 @@
 -module(x_transform).
 -author("MoYi").
 
-
+-include("x.hrl").
 -export([parse_transform/2]).
 
 parse_transform(AST, _Option) ->
     case is_x_bp(AST) of
         true ->
             put(route, []),
+            put(module, ast_module(AST)),
             p_parse_transform(AST, []);
         _ ->
             AST
@@ -51,10 +52,25 @@ match_blueprint({function, _Line, blueprint, 0, _Body} = Bp) ->
 match_blueprint(_) -> false.
 
 add_bp() ->
-    get(bp).
+    Route = get(route),
+    Module = get(module),
+    Bp = get(bp),
+    {function, FuncLine, blueprint, 0,
+        [{clause, FuncLine, [], [],
+            [{bin, Line, [{bin_element, Line, {string, Line, Prefix}, default, default}]}]}]} = Bp,
+    Arg = erl_parse:abstract(#meta_route{module = Module, prefix = Prefix, route = Route}, Line),
+    Patch = {call, Line, {remote, Line, {atom, Line, x_server}, {atom, Line, regist}}, [Arg]},
+    {function, FuncLine, blueprint, 0,
+        [{clause, FuncLine, [], [],
+            [Patch, {bin, Line, [{bin_element, Line, {string, Line, Prefix}, default, default}]}]}]}.
+
 
 is_x_bp(AST) -> lists:any(fun match_behavior/1, AST).
 match_behavior({attribute, _, behavior, x_blueprint}) -> true;
 match_behavior({attribute, _, behaviour, x_blueprint}) -> true;
 match_behavior(_) -> false.
+
+ast_module(AST) ->
+    F = fun({attribute, _, module, Module}, no) -> Module;(_, Acc) -> Acc end,
+    lists:foldr(F, no, AST).
 

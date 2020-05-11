@@ -4,17 +4,18 @@
 -author("MoYi").
 -compile([{parse_transform, x_transform}]).
 %% API
--export([blueprint/0]).
--export([hello/0]).
+-export([blueprint/0, init/2]).
+-export([hello/0, login/0]).
 
 blueprint() ->
     <<"/">>.
+init(Req, Option) ->
+    x:cowboy_init(Req, Option).
 
 -get({app, <<"/">>}).
 hello() ->
     #{<<"hello">> => <<"world">>}.
 
-
-run() ->
-    x:set_web_app(app, [{ip, '127.0.0.1'}, {port, 57777}]),
-    x:run(app).
+-post({app, <<"/login">>}).
+login() ->
+    #{<<"hello">> => <<"world">>}.

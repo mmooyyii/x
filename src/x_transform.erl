@@ -59,7 +59,7 @@ add_bp() ->
         [{clause, FuncLine, [], [],
             [{bin, Line, [{bin_element, Line, {string, Line, Prefix}, default, default}]}]}]} = Bp,
     Arg = erl_parse:abstract(#meta_route{module = Module, prefix = Prefix, route = Route}, Line),
-    Patch = {call, Line, {remote, Line, {atom, Line, x_server}, {atom, Line, regist}}, [Arg]},
+    Patch = {call, Line, {remote, Line, {atom, Line, x_server}, {atom, Line, register}}, [Arg]},
     {function, FuncLine, blueprint, 0,
         [{clause, FuncLine, [], [],
             [Patch, {bin, Line, [{bin_element, Line, {string, Line, Prefix}, default, default}]}]}]}.

@@ -3,5 +3,5 @@
 -include("x.hrl").
 
 
--callback blueprint() -> term().
+-callback blueprint() -> binary().
 -callback init(term(), term()) -> term().

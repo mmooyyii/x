@@ -2,7 +2,7 @@
 -author("MoYi").
 
 %% API
--export([start/0, stop/1, set_rule/1, init/2]).
+-export([start/0, stop/1, set_rule/2, init/2]).
 
 start() ->
     cowboy:start_clear(http, [{port, 58887}], #{}).
@@ -11,16 +11,15 @@ stop(_State) ->
     ok = cowboy:stop_listener(http).
 
 %% [{host,[{prefix,module,option}]}]
-%% [{'_', [{"/123", aaaa, []}]}]
-set_rule(Rule) ->
-    Dispatch = cowboy_router:compile([{'_', [{"/:name", aaaa, []}]}]),
-    ranch:set_protocol_options(http, #{env => #{dispatch => Dispatch}}).
+set_rule(App, PrefixModulePair) ->
+    Route = [{Prefix, Module, []} || {Prefix, Module} <- PrefixModulePair],
+    Dispatch = cowboy_router:compile([{'_', Route}]),
+    ranch:set_protocol_options(App, #{env => #{dispatch => Dispatch}}).
 
-
-init(Req0, Opts) ->
-    App = x_server:find_app(1),
-    {M, F} = x_server:find_route(App),
-    A = x_server:make_args(Req0, Opts),
+init(Req, Opts) ->
+    App = x_global:get_app(port(Req)),
+    {M, F} = x_server:find_route(App, path(Req)),
+    A = x_server:make_args(Req, Opts),
     Rt = try
              apply(M, F, A)
          catch
@@ -28,7 +27,9 @@ init(Req0, Opts) ->
                  {ErrorModule, ErrorFunc} = x_server:find_error_handle(App),
                  apply(ErrorModule, ErrorFunc, [{Error, Reason, Stack}])
          end,
-%%    Req = cowboy_req:reply(200,
-%%    #{<<"content-type">> => <<"text/plain">>},
-%%    <<"Hello 123!">>, Req0),
     {ok, x_utils:make_response(Rt), Opts}.
+
+port(Req) ->
+    58888.
+
+path(Req) -> <<"/">>.

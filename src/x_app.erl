@@ -19,7 +19,6 @@ start() ->
     ok = application:start(x).
 
 start(_Type, _Args) ->
-    ets:new(abc, [set, named_table]),
     x_sup:start_link().
 
 stop(_State) ->

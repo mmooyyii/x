@@ -7,7 +7,7 @@
 -define(XGlobal, x_global_ets).
 
 new() ->
-    ets:new(?XGlobal, [set, named_table]).
+    ets:new(?XGlobal, [set, named_table, public]).
 
 set_app(Port, App) ->
     ets:insert(?XGlobal, {Port, App}).

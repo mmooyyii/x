@@ -9,8 +9,9 @@ cowboy_init(Req0, Opts) ->
 
 start_app(App, Config) ->
     Port = proplists:get_value(port, Config),
-    {ok, Pid} = x_server:start_link(App, Config),
-    x_global:set_app(Port, Pid),
+    Pid = case x_server:start_link(App, Config) of
+              {ok, P} -> P;
+              {error, {already_started, P}} -> P
+          end,
+    x_global:set_app(Port, App),
     {ok, Pid}.
-
-

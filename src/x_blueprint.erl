@@ -1,10 +1,7 @@
 -module(x_blueprint).
 -author("MoYi").
-
-
 -include("x.hrl").
--type prefix() :: binary().
 
--callback blueprint() -> prefix().
--callback init() -> no_return().
 
+-callback blueprint() -> binary().
+-callback init(term(), term()) -> term().

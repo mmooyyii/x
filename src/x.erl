@@ -2,18 +2,16 @@
 -author("yimo").
 
 %% API
--export([body/1, set_web_app/2, run/1, stop/1]).
+-export([start_app/2, cowboy_init/2]).
 
+cowboy_init(Req0, Opts) ->
+    x_cowboy:init(Req0, Opts).
 
-set_web_app(WebApp, Config) ->
-    ok.
-
-run(WebApp) ->
-    ok.
-
-stop(WebApp) ->
-    ok.
-
-body(Key) ->
-    ok.
-
+start_app(App, Config) ->
+    Port = proplists:get_value(port, Config),
+    Pid = case x_server:start_link(App, Config) of
+              {ok, P} -> P;
+              {error, {already_started, P}} -> P
+          end,
+    x_global:set_app(Port, App),
+    {ok, Pid}.

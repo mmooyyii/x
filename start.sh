@@ -1,8 +1,32 @@
-#!/bin/bash
-
-
-erl -pa /Users/yimo/x/_build/default/deps/*/ebin/ -name "abc@127.0.0.1" -s x_app start
-
-
-
-
+ {function,10,blueprint,0,
+  [{clause,10,[],[],
+    [{bin,11,
+      [{call,11,
+        {remote,11,{atom,11,x_server},{atom,11,regist}},
+        [{cons,11,
+          {tuple,11,
+           [{atom,11,hello},
+            {tuple,11,
+             [{atom,11,get},
+              {tuple,11,
+               [{atom,11,app},
+                {bin,11,
+                 [{bin_element,11,{integer,11,47},default,default}]}]}]}]},
+          {nil,11}}]},
+       {bin_element,11,{string,11,"/"},default,default}]}]}]},
+ {function,20,f,0,
+  [{clause,20,[],[],
+    [{call,20,
+      {remote,20,{atom,20,x_server},{atom,20,regist}},
+      [{cons,20,
+        {tuple,20,
+         [{atom,20,hello},
+          {tuple,20,
+           [{atom,20,get},
+            {tuple,20,
+             [{atom,20,app},
+              {bin,20,
+               [{bin_element,20,{string,20,"/"},default,default}]}]}]}]},
+        {nil,20}}]},
+     {bin,20,[{bin_element,20,{string,20,"/123"},default,default}]}]}]},
+ {eof,20}]

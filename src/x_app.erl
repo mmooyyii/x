@@ -8,20 +8,20 @@
 
 %% API.
 start() ->
-%%    TODO: 以后改
-    ok = application:start(asn1),
-    ok = application:start(crypto),
-    ok = application:start(public_key),
-    ok = application:start(cowlib),
-    ok = application:start(ssl),
-    ok = application:start(jesse),
-    ok = application:start(ranch),
-    ok = application:start(cowboy),
-    ok = application:start(x).
-
+    application:start(asn1),
+    application:start(crypto),
+    application:start(public_key),
+    application:start(cowlib),
+    application:start(ssl),
+    application:start(jesse),
+    application:start(ranch),
+    application:start(cowboy),
+    application:start(x).
 
 start(_Type, _Args) ->
-    {ok, self()}.
+    x_global:new(),
+    x_sup:start_link().
 
 stop(_State) ->
-    ok = cowboy:stop_listener(http).
+    exit(x_sup, shutdown).
+

@@ -2,7 +2,7 @@
 -author("MoYi").
 
 %% API
--export([start/2, stop/1, set_rule/2, init/2]).
+-export([start/2, stop/1, set_rule/2, init/3]).
 
 start(App, Config) ->
     cowboy:start_clear(App, Config, #{}).
@@ -16,24 +16,35 @@ set_rule(App, PrefixModulePair) ->
     Dispatch = cowboy_router:compile([{'_', Route}]),
     ranch:set_protocol_options(App, #{env => #{dispatch => Dispatch}}).
 
-init(Req, Opts) ->
-    Req = cowboy_req:reply(200, #{
-        <<"content-type">> => <<"text/plain">>
-    }, <<"Hello world!">>, Req),
-    {ok, Req, Opts}.
-%%    App = x_global:get_app(port(Req)),
-%%    {M, F} = x_server:find_route(App, path(Req)),
-%%    A = x_server:make_args(Req, Opts),
-%%    Rt = try
-%%             apply(M, F, A)
-%%         catch
-%%             Error:Reason:Stack ->
-%%                 {ErrorModule, ErrorFunc} = x_server:find_error_handle(App),
-%%                 apply(ErrorModule, ErrorFunc, [{Error, Reason, Stack}])
-%%         end,
-%%    {ok, x_utils:make_response(Rt), Opts}.
+init(Module, Req, Opts) ->
+    App = x_global:get_app(port(Req)),
+    case x_server:find_route(App, Module, method(Req), path(Req)) of
+        {F, Url} ->
+            A = x_server:make_args(Url, Req, Opts),
+            try
+                {ok, x_utils:make_response(apply(Module, F, A), Req), Opts}
+            catch
+                _:_ ->
+                    '500'(Req, Opts)
+            end;
+        error ->
+            io:format("1231231231"),
+            '404'(Req, Opts)
+    end.
 
-port(Req) ->
-    58888.
 
-path(Req) -> <<"/">>.
+port(#{port:=Port}) ->
+    Port.
+
+path(#{path_info:=[Prefix], path := <<Prefix, Return/binary>>}) ->
+    Return;
+path(#{path := Path}) ->
+    Path.
+method(#{method :=Method}) ->
+    binary_to_atom(http_util:to_lower(Method), utf8).
+
+'404'(Req, Opts) ->
+    {ok, cowboy_req:reply(404, #{<<"content-type">> => <<"text/plain">>}, <<"">>, Req), Opts}.
+
+'500'(Req, Opts) ->
+    {ok, cowboy_req:reply(500, #{<<"content-type">> => <<"text/plain">>}, <<"">>, Req), Opts}.

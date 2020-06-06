@@ -18,8 +18,10 @@ start() ->
     application:start(cowboy),
     application:start(x).
 
+
 start(_Type, _Args) ->
     x_global:new(),
+    helloworld:start(),
     x_sup:start_link().
 
 stop(_State) ->

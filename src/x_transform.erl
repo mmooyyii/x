@@ -45,7 +45,7 @@ match_api({function, _Line, Function, _, _Body}) ->
 match_api(_) ->
     pass.
 
-match_blueprint({function, _Line, blueprint, 0, _Body} = Bp) ->
+match_blueprint({function, _Line, blueprint, 1, _Body} = Bp) ->
     undefined = get(store),
     put(bp, Bp),
     true;
@@ -55,14 +55,14 @@ add_bp() ->
     Route = get(route),
     Module = get(module),
     Bp = get(bp),
-    {function, FuncLine, blueprint, 0,
-        [{clause, FuncLine, [], [],
+    {function, FuncLine, blueprint, 1,
+        [{clause, FuncLine, [App], [],
             [{bin, Line, [{bin_element, Line, {string, Line, Prefix}, default, default}]}]}]} = Bp,
-    Arg = erl_parse:abstract(#meta_route{module = Module, prefix = Prefix, route = Route}, Line),
+    Arg = erl_parse:abstract(#meta_route{module = Module, prefix = Prefix ++ "/[...]", route = Route}, Line),
     Patch = {call, Line, {remote, Line, {atom, Line, x_server}, {atom, Line, register}}, [Arg]},
-    {function, FuncLine, blueprint, 0,
-        [{clause, FuncLine, [], [],
-            [Patch, {bin, Line, [{bin_element, Line, {string, Line, Prefix}, default, default}]}]}]}.
+    {function, FuncLine, blueprint, 1,
+        [{clause, FuncLine, [App], [],
+            [Patch, {bin, Line, [{bin_element, Line, {string, Line, Prefix ++ "/[...]"}, default, default}]}]}]}.
 
 
 is_x_bp(AST) -> lists:any(fun match_behavior/1, AST).
